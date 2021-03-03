@@ -1,6 +1,7 @@
 # Hanojski Stolpi
 
 Kako igrati? 
+
     Vnesi dve stevilki zaporedoma, loceni s presledkom. (<iz_stolpa> <v_stolp>)
     Npr.: 1 3
 
