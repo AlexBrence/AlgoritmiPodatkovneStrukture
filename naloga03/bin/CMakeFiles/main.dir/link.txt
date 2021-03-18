@@ -1,0 +1,1 @@
+/usr/bin/c++ -pedantic-errors -Wall -Wextra -Weffc++ CMakeFiles/main.dir/src/main.cpp.o -o main 

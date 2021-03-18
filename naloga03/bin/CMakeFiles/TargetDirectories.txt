@@ -1,0 +1,7 @@
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/install/strip.dir
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/install/local.dir
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/install.dir
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/list_install_components.dir
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/rebuild_cache.dir
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/edit_cache.dir
+/home/alex/Documents/APS/naloga03/bin/CMakeFiles/main.dir

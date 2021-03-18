@@ -1,0 +1,23 @@
+{
+"configurations": {
+"Launch": {
+"adapter": "vscode-cpptools",
+"configuration": {
+"request": "launch",
+"program": "/home/alex/Documents/APS/naloga03/debug/main",
+"args": [],
+"environment": [],
+"externalConsole": true,
+"MIMode": "gdb"
+}
+},
+"Attach": {
+"adapter": "vscode-cpptools",
+"configuration": {
+"request": "attach",
+"program": "debug/main",
+"MIMode": "gdb"
+}
+}
+}
+}

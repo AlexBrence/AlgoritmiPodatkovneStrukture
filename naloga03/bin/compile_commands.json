@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/alex/Documents/APS/naloga03/bin",
+  "command": "/usr/bin/c++  -I/home/alex/Documents/APS/naloga03/include -pedantic-errors -Wall -Wextra -Weffc++ -std=gnu++2a -o CMakeFiles/main.dir/src/main.cpp.o -c /home/alex/Documents/APS/naloga03/src/main.cpp",
+  "file": "/home/alex/Documents/APS/naloga03/src/main.cpp"
+}
+]
