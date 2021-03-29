@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <cstdint>
 #include <iostream>
 #include <memory>
+#include <type_traits>
 
 
 struct Node {
@@ -10,24 +12,22 @@ struct Node {
     std::shared_ptr<Node> rightSon = nullptr;
 };
 bool running = true;
-//std::shared_ptr<Node> root = nullptr;
-
 
 
 void napaka(const std::string& what = "") {
     std::cout << "***** NAPAKA: " << what;
 }
 
-void iskanjePodatka(const std::shared_ptr<Node>& node, const int key) {
-    if (node->key == key) {
-        std::cout << "Kljuc " << key << " se nahaja v drevesu.";
-        return;
-
-    } else {
+std::shared_ptr<Node> iskanjePodatka(const std::shared_ptr<Node>& node, const int key) {
+    if (node == nullptr || node->key == key) {
+        return node;
+    }
+    else {
         if (key < node->key) {
-            iskanjePodatka(node->leftSon, key);
-        } else {
-            iskanjePodatka(node->rightSon, key);
+            return iskanjePodatka(node->leftSon, key);
+        }
+        else {
+            return iskanjePodatka(node->rightSon, key);
         }
     }
 }
@@ -44,11 +44,12 @@ void vnosPodatka(std::shared_ptr<Node>& root, const int key) {
 
         if (key < node->key) {
             node = node->leftSon;
-        } else if (key > node->key) {
+        }
+        else if (key > node->key) {
             node = node->rightSon;
-        } else {
-            napaka();
-            return;
+        }
+        else {
+            return napaka();
         }
     }
 
@@ -59,10 +60,12 @@ void vnosPodatka(std::shared_ptr<Node>& root, const int key) {
 
     if (nodeFather == nullptr) {
         root = newNode;
-    } else {
+    } 
+    else {
         if (newNode->key < nodeFather->key) {
             nodeFather->leftSon = newNode;
-        } else {
+        }
+        else {
             nodeFather->rightSon = newNode;
         }
     }
@@ -111,8 +114,132 @@ int maksimum(const std::shared_ptr<Node>& root) {
 }
 
 
+int predhodnik(const std::shared_ptr<Node>& root, const int key) {
+    std::shared_ptr<Node> node = iskanjePodatka(root, key);
+
+    if (node != nullptr && node->leftSon != nullptr) {
+        return maksimum(node->leftSon);
+    }
+    else if (node == nullptr){
+        // napaka("Vnesenega stevila ni v drevesu.");
+        return INT32_MIN;
+    }
+
+    // Tu gremo gor po drevesu
+    std::shared_ptr<Node> tmp = node->father;
+    while (tmp != nullptr && node == tmp->leftSon) {
+        node = tmp;
+        tmp = tmp->father;
+    }
+
+    // Preveri, ce predhodnik obstaja
+    if (tmp == nullptr) {
+        return INT32_MIN;
+    }
+    else {
+        return tmp->key;
+    }
+
+}
+
+
+
+int naslednik(const std::shared_ptr<Node>& root, const int key) {
+    std::shared_ptr<Node> node = iskanjePodatka(root, key);
+
+    if (node != nullptr && node->rightSon != nullptr) {
+        return minimum(node->rightSon);
+    }
+    else if (node == nullptr){
+        return INT32_MIN;
+    }
+
+    // Tu gremo gor po drevesu
+    std::shared_ptr<Node> tmp = node->father;
+    while (tmp != nullptr && node == tmp->rightSon) {
+        node = tmp;
+        tmp = tmp->father;
+    }
+
+    // Preveri, ce naslednik obstaja
+    if (tmp == nullptr) {
+        return INT32_MIN;
+    }
+    else {
+        return tmp->key;
+    }
+}
+
+
+
+void brisanjePodatka(std::shared_ptr<Node>& root, const int key) {
+    std::shared_ptr<Node> node = iskanjePodatka(root, key);
+    std::shared_ptr<Node> y = nullptr;
+    std::shared_ptr<Node> x = nullptr;
+
+    if (node == nullptr) {
+        return napaka("Ta kljuc ne obstaja");
+    }
+
+    if (node->leftSon == nullptr || node->rightSon == nullptr) {
+        y = node;
+    }
+    else {
+        int n = naslednik(root, key);
+        y = iskanjePodatka(root, n);
+    }
+
+    if (y->leftSon != nullptr) {
+        x = y->leftSon;
+    }
+    else {
+        x = y->rightSon;
+    }
+
+    if (x != nullptr) {
+        x->father = y->father;
+    }
+
+    if (y->father == nullptr) {
+        root = x;
+    }
+    else {
+        if (y == y->father->leftSon) {
+            y->father->leftSon = x;
+        }
+        else {
+            y->father->rightSon = x;
+        }
+    }
+
+    if (y != node) {
+        y->key = node->key;
+    }
+}
+
+
+void brisi(std::shared_ptr<Node>& root, const int key) {
+    std::shared_ptr<Node> node = iskanjePodatka(root, key);
+    std::shared_ptr<Node> y = nullptr;
+
+    if (node == nullptr) return napaka("Podatek ne obstaja.");
+
+    if (node->leftSon == nullptr || node->rightSon == nullptr) {
+        brisanjePodatka(root, node->key);
+    }
+    else {
+        int n = naslednik(root, key);
+        y = iskanjePodatka(root, n);
+        n = y->key;
+        brisanjePodatka(root, y->key);
+        node->key = n;
+    }
+    std::cout << "Izbrisano.";
+}
+
+
 void menu(std::shared_ptr<Node>& root) {
-    int choice, value;
+    int choice, value, key;
 
     std::cout << "Binarno Iskalno Drevo - izbira:\n\n";
     std::cout << "1) Vnos podatka\n";
@@ -145,7 +272,11 @@ void menu(std::shared_ptr<Node>& root) {
             std::cout << "Vnesi vrednost, ki jo zelis poiskati: ";
             std::cin >> value;
             if (root == nullptr) napaka("Drevo je prazno.");
-            else iskanjePodatka(root, value);
+            else {
+                std::cout << "Kljuc " << value << " se " 
+                          << ((iskanjePodatka(root, value) == nullptr) ? "ne " : "")
+                          << "nahaja v drevesu.";
+            }
             break;
         case 5:
             if (root == nullptr) napaka("Drevo je prazno.");
@@ -155,8 +286,26 @@ void menu(std::shared_ptr<Node>& root) {
             }
             break;
         case 6:
+            std::cout << "Vnesi vrednost: ";
+            std::cin >> value;
+            if (root == nullptr) napaka("Drevo je prazno.");
+            else {
+                key = predhodnik(root, value);
+                std::cout << "Predhodnik: ";
+                if (key != INT32_MIN) std::cout << key;
+                else std::cout << "Ga ni";
+
+                key = naslednik(root, value);
+                std::cout << "\nNaslednik: ";
+                if (key != INT32_MIN) std::cout << key;
+                else std::cout << "Ga ni";
+            }
             break;
         case 7:
+            std::cout << "Vnesi vrednost: ";
+            std::cin >> value;
+            if (root == nullptr) napaka("Drevo je prazno.");
+            else brisi(root, value);
             break;
         case 8:
             running = false;
