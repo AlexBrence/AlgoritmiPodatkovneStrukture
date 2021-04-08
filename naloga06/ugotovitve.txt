@@ -1,0 +1,62 @@
+---------------------------|
+1) QuickSort brez mediane  |
+2) QuickSort z mediano     |
+3) Bubble Sort             |
+---------------------------|
+
+=== NAKLJUCNA STEVILA V POLJU
+10.000 elementov
+1) 5899 μs
+2) 5934 μs
+3) 789041 μs
+
+20.000 elementov
+1) 11582 μs
+2) 12254 μs
+3) 3181845 μs
+
+30.000 elementov
+1) 17905 μs
+2) 18824 μs
+3) 7019681 μs
+
+40.000 elementov
+1) 23623 μs
+2) 26293 μs
+3) 12364984 μs
+
+50.000 elementov
+1) 33199 μs
+2) 31515 μs
+3) 19986201 μs
+
+=== NARASCAJOCA STEVILA V POLJU
+10.000 elementov
+1) 146174 μs
+2) 1781 μs
+3) 284325 μs
+
+20.000 elementov
+1) 482976 μs
+2) 3495 μs
+3) 1047916 μs
+
+30.000 elementov
+1) 1046129 μs
+2) 5284 μs
+3) 2296614 μs
+
+40.000 elementov
+1) 1835597 μs
+2) 7275 μs
+3) 4134602 μs
+
+50.000 elementov
+1) 2855620 μs
+2) 9841 μs
+3) 6401484 μs
+
+Kaj sem ugotovil?
+  - pri nakljucnem zaporedju v polju je najucinkovitejse urejanje QuickSort brez mediane ter z mediano
+  - pri narascajocem in padajocem zaporedju je najucinkovitejse urejanje QuickSort z mediano, QS
+      brez mediane vzame prevec casa za merjenje
